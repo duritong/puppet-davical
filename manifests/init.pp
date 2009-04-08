@@ -1,36 +1,35 @@
-# modules/skeleton/manifests/init.pp - manage skeleton stuff
+# modules/davical/manifests/init.pp - manage davical stuff
 # Copyright (C) 2007 admin@immerda.ch
 # GPLv3
 
-# modules_dir { "skeleton": }
+# modules_dir { "davical": }
 
-class skeleton {
+class davical {
     case $operatingsystem {
-        gentoo: { include skeleton::gentoo }
-        default: { include skeleton::base }
+        gentoo: { include davical::gentoo }
+        default: { include davical::base }
     }
 }
 
-class skeleton::base {
-    package{'skeleton':
-        ensure => installed,
-    }
+class davical::base {
+    # needs a few apache, settings ... ????
 
-    service{skeleton:
-        ensure => running,
-        enable => true,
-        #hasstatus => true, #fixme!
-        require => Package[skeleton],
-    }
+    postgres::role { davical_app: ensure => present, password => $davicalapppassword }
+    postgres::role { davical_dba: ensure => present, password => $davicaldbapassword }
+    postgres::database {
+        ["davical"]:
+                ensure => present, owner => davical_app, require => Postgres::Role[davical_dba]
+        }
+
 
 }
 
-class skeleton::gentoo inherits skeleton::base {
-    Package[skeleton]{
+class davical::gentoo inherits davical::base {
+    Package[davical]{
         category => 'some-category',
     }
 
     #conf.d file if needed
     # needs module gentoo
-    #gentoo::etcconfd { skeleton: require => "Package[skeleton]", notify => "Service[skeleton]"}
+    #gentoo::etcconfd { davical: require => "Package[davical]", notify => "Service[davical]"}
 }
