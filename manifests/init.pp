@@ -14,13 +14,15 @@ class davical {
 class davical::base {
     # needs a few apache, settings ... ????
 
+
+  if tagged(dbserver) {
     postgres::role { davical_app: ensure => present, password => $davicalapppassword }
     postgres::role { davical_dba: ensure => present, password => $davicaldbapassword }
     postgres::database {
         ["davical"]:
                 ensure => present, owner => davical_app, require => Postgres::Role[davical_dba]
         }
-
+  }
 
 }
 
