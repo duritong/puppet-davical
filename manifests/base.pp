@@ -3,6 +3,7 @@ class davical::base {
     ensure => present,
   }
   include perl::extensions::yaml
+  include perl::extensions::dbd_pg
   
   file{'/etc/davical/administration.yml':
     source => [ "puppet:///modules/site-davical/conf/${fqdn}/administration.yml",
