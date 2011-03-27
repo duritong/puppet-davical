@@ -2,6 +2,8 @@ define davical::vhost(
   $ensure = 'present',
   $domainalias = 'absent',
   $ssl_mode = 'force',
+  $logmode = 'default',
+  $mod_security = false,
   $monitor_url = 'absent'
 ){
   include ::davical
@@ -21,9 +23,11 @@ define davical::vhost(
       gentoo => '/var/log/apache2/',
       default => '/var/log/httpd'
     },
+    logmode => $logmode,
     manage_webdir => false,
     path_is_webdir => true,
     ssl_mode => $ssl_mode,
+    mod_security => $mod_security,
     template_partial => 'davical/vhost/php_stuff.erb',
     require => Package['davical'],
   }
