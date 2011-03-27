@@ -18,9 +18,9 @@ define davical::vhost(
     ensure => $ensure,
     domainalias => $domainalias,
     manage_docroot => false,
-    path => '/usr/share/davical/htdocs/',
+    path => '/usr/share/davical/htdocs',
     logpath => $operatingsystem ? {
-      gentoo => '/var/log/apache2/',
+      gentoo => '/var/log/apache2',
       default => '/var/log/httpd'
     },
     logmode => $logmode,
