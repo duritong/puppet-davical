@@ -59,7 +59,6 @@ define davical::vhost(
       default_charset   => "utf-8"
     },
     mod_security => $mod_security,
-    template_partial => 'davical/vhost/php_stuff.erb',
     require => Package['davical'],
   }
 
