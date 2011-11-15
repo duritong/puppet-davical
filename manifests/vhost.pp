@@ -14,7 +14,7 @@ define davical::vhost(
     source => [ "puppet:///modules/site-davical/conf/${fqdn}/${name}-conf.php",
                 "puppet:///modules/site-davical/conf/${name}-conf.php" ],
     require => Package['davical'],
-    owner => root, group => apache, mode => 0640;
+    owner => root, mode => 0640;
   }
 
   if ($run_mode == 'fcgid'){
@@ -30,6 +30,13 @@ define davical::vhost(
         default => '/sbin/nologin'
       },
       before => Apache::Vhost::Php::Standard[$name],
+    }
+    File["/etc/davical/${name}-conf.php"]{
+      group => $name
+    }
+  } else {
+    File["/etc/davical/${name}-conf.php"]{
+      group => apache
     }
   }
 
@@ -54,7 +61,7 @@ define davical::vhost(
       include_path      => '/usr/share/awl/inc',
       magic_quotes_gpc  => 0,
       register_globals  => 'On',
-      open_basedir      => 'On',
+      open_basedir      => "/etc/davical:/usr/share/davical:/var/www/session.save_path/${name}/:/var/www/upload_tmp_dir/${name}/:/usr/share/awl/inc",
       error_reporting   => "E_ALL & ~E_NOTICE",
       default_charset   => "utf-8"
     },
