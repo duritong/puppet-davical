@@ -3,7 +3,7 @@
 # GPLv3
 
 class davical {
-    case $operatingsystem {
+    case $::operatingsystem {
         default: { include davical::base }
     }
 }

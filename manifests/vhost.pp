@@ -11,8 +11,8 @@ define davical::vhost(
 ){
   include ::davical
   file{"/etc/davical/${name}-conf.php":
-    source => [ "puppet:///modules/site-davical/conf/${fqdn}/${name}-conf.php",
-                "puppet:///modules/site-davical/conf/${name}-conf.php" ],
+    source => [ "puppet:///modules/site_davical/conf/${::fqdn}/${name}-conf.php",
+                "puppet:///modules/site_davical/conf/${name}-conf.php" ],
     require => Package['davical'],
     owner => root, mode => 0640;
   }
@@ -24,7 +24,7 @@ define davical::vhost(
       ensure => $ensure,
       uid => $run_uid,
       gid => $run_gid,
-      shell => $operatingsystem ? {
+      shell => $::operatingsystem ? {
         debian => '/usr/sbin/nologin',
         ubuntu => '/usr/sbin/nologin',
         default => '/sbin/nologin'
@@ -45,7 +45,7 @@ define davical::vhost(
     domainalias => $domainalias,
     manage_docroot => false,
     path => '/usr/share/davical/htdocs',
-    logpath => $operatingsystem ? {
+    logpath => $::operatingsystem ? {
       gentoo => '/var/log/apache2',
       default => '/var/log/httpd'
     },
@@ -74,7 +74,7 @@ define davical::vhost(
       'absent' => $name,
       default => $monitor_url,
     }
-    nagios::service::http{"${real_monitor_url}":
+    nagios::service::http{$real_monitor_url:
       ensure => $ensure,
       ssl_mode => $ssl_mode,
     }

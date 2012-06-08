@@ -6,8 +6,8 @@ class davical::base {
   include perl::extensions::dbd_pg
   
   file{'/etc/davical/administration.yml':
-    source => [ "puppet:///modules/site-davical/conf/${fqdn}/administration.yml",
-                "puppet:///modules/site-davical/conf/administration.yml" ],
+    source => [ "puppet:///modules/site_davical/conf/${::fqdn}/administration.yml",
+                "puppet:///modules/site_davical/conf/administration.yml" ],
     require => Package['davical'],
     owner => root, group => root, mode => 0640;
   }
